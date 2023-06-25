@@ -48,7 +48,9 @@ try:
     # '180,180,180' = Silver
     # '44,44,44' = Black
     # '137,0,0' = Red 2
+    car_color = '180,44,44'
     #get the color code and store it in car_color
+    car_model.set_attribute('color', car_color)
     #apply color using set_attribute on car_model
     spawn_point = (world.get_map().get_spawn_points()[31])
     dropped_vehicle = world.spawn_actor(car_model, spawn_point)
@@ -72,11 +74,16 @@ try:
         for detection in radar_data:
             distance_name_data["distance"] = detection.depth
             #Write If condition to check distance 3 to 6 meters
+            if distance_name_data["distance"]> 3 and distance_name_data['distance']<6:
                 print("Brake")
-                #write a code to apply brake 
+                #write a code to apply brake
+                dropped_vehicle.apply_control(carla.VehicleControl(hand_brake=True)) 
                 #get the waypoint for where your car running
+                waypoint =world.get_map().get_waypoint(dropped_vehicle.get_location(),
+                project_to_road=True, lane_type=(carla.LaneType.Driving |
+                carla.LaneType.Shoulder | carla.LaneType.Sidewalk))
                 #print current lane
-
+                print("Current lane type: " + str(waypoint.lane_type))
                 break
             else:
                 check_traffic_lights()
